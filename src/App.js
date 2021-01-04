@@ -5,6 +5,7 @@ export default function App() {
   const videoRef = useRef(null);
 
   useEffect(() => {
+    window.video = videoRef.current;
     videoRef.current.play();
   });
 
