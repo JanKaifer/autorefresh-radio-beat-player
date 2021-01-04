@@ -11,6 +11,7 @@ export default function App() {
   return (
     <div className="App">
       <video
+        controls
         onStalled={() => {
           videoRef.current.load();
           videoRef.current.play();
