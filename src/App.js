@@ -1,33 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./styles.css";
 
-const isPlaying = (video) =>
-  !!(
-    video.currentTime > 0 &&
-    !video.paused &&
-    !video.ended &&
-    video.readyState > 2
-  );
+const isNotBroken = (video) => !!(!video.ended && video.readyState > 2);
 
 export default function App() {
-  const videoRef = useRef(null);
+  const audioRef = useRef(null);
   const [showCoolBackground] = useState(() => Math.random() > 0.95);
   const [refreshCounter, setRefreshCounter] = useState(0);
 
   useEffect(() => {
     try {
-      window.video = videoRef.current;
-      videoRef.current.play();
+      window.audio = audioRef.current;
+      audioRef.current.play();
     } catch (e) {
       console.log("unable to autoplay video", e);
     }
   });
 
-  const refreshVideo = async () => {
+  const refreshAudio = async () => {
     try {
       setRefreshCounter((v) => v + 1);
-      await videoRef.current.play();
-      await videoRef.current.load();
+      await audioRef.current.play();
+      await audioRef.current.load();
     } catch (e) {
       console.log("unable to restart video", e);
     }
@@ -35,10 +29,10 @@ export default function App() {
 
   useEffect(() => {
     const pid = setInterval(() => {
-      if (!isPlaying(videoRef.current)) {
-        refreshVideo();
+      if (!isNotBroken(audioRef.current)) {
+        refreshAudio();
       }
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(pid);
   });
@@ -48,10 +42,11 @@ export default function App() {
       <h2 style={{ backgroundColor: "white" }}>
         Restart counter {refreshCounter}
       </h2>
-      <video
+      <audio
         controls
-        onStalled={refreshVideo}
-        ref={videoRef}
+        onStalled={refreshAudio}
+        onError={refreshAudio}
+        ref={audioRef}
         src="https://icecast5.play.cz/radiobeat128.mp3"
       />
     </div>
