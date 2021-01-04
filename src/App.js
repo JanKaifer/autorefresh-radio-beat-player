@@ -8,10 +8,14 @@ export default function App() {
   const [showCoolBackground] = useState(() => Math.random() > 0.95);
   const [refreshCounter, setRefreshCounter] = useState(0);
 
+  const playVideo = async () => {
+    await audioRef.current.play();
+  };
+
   useEffect(() => {
     try {
       window.audio = audioRef.current;
-      audioRef.current.play();
+      playVideo();
     } catch (e) {
       console.log("unable to autoplay video", e);
     }
@@ -20,7 +24,6 @@ export default function App() {
   const refreshAudio = async () => {
     try {
       setRefreshCounter((v) => v + 1);
-      await audioRef.current.play();
       await audioRef.current.load();
     } catch (e) {
       console.log("unable to restart video", e);
@@ -46,6 +49,8 @@ export default function App() {
         controls
         onStalled={refreshAudio}
         onError={refreshAudio}
+        onLoad={playVideo}
+        onLoadedData={playVideo}
         ref={audioRef}
         src="https://icecast5.play.cz/radiobeat128.mp3"
       />
