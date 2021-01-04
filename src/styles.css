@@ -10,6 +10,11 @@ body,
   width: 100%;
 }
 
+.App {
+  padding: 50px;
+  box-sizing: border-box;
+}
+
 .cool-background {
   background-image: url("mazani.jpg");
   background-size: contain;
